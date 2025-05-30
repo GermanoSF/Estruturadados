@@ -5,7 +5,6 @@
 
 #define TAM_LISTA1 30
 #define TAM_LISTA2 30
-#define SOMA_TAM 60
 
 int main(){
       
@@ -42,11 +41,15 @@ int main(){
       	
       }
       
+      printf("Listas criadas:\n\n");
+      
       exibir_ambas(lista1,lista2);
       
-      //lista1 = remover_pares(lista1);
-//      
-//      printf("\nLista 1 sem pares:\n");
+      lista1 = remover_pares(lista1);
+     
+      printf("\nLista 1 sem pares:\n");
+      
+      exibir(lista1);
       
       Celula *lista3 = unir_listas(lista1,lista2);
       
@@ -54,11 +57,15 @@ int main(){
       
       exibir(lista3);
       
-      lista3 = ordenar(SOMA_TAM,lista3);
+      lista3 = ordenar(lista3);
       
-      printf("\n\nUniao das listas de forma ordenada ordenada:\n\n");
+      printf("\n\nUniao das listas de forma ordenada (nao repete numeros iguais):\n\n");
       
       exibir(lista3);
+      
+      lista3 = deletar_lista(lista3);
+      
+      if (!lista3) printf("\n\nLista de uniao removida com sucesso");
 
 	return 0;
       
