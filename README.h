@@ -1,4 +1,5 @@
 #include<stdbool.h>
+#include<limits.h> //utilizado para ordenacao
 
 typedef struct no{
       
@@ -6,27 +7,6 @@ typedef struct no{
       struct no *prox;
       
 }Celula;
-
-bool contem(int dado,Celula * lista){
-   
-   	if (!lista){
-   		
-   		return false;
-   		
-   	}
-    for(Celula *p=lista; p ;p = p->prox){
-       
-        if (p->dado==dado){
-           
-            return true;
-           
-        }
-       
-    }
-   
-    return false;
-   
-}
 
 Celula *inserir(int dado , Celula *lista){
 	
@@ -88,57 +68,74 @@ void exibir(Celula *lista){
 	
 }
 
-//Celula *deletar(int dado, Celula *lista){
-//	
-//	if (lista->dado==dado){
-//		
-//		Celula *p = lista->prox;
-//		free(lista);
-//		return p;
-//		
-//	}
-//	
-//	for (; lista->prox ;lista=lista->prox){
-//		
-//		if (lista->prox->dado==dado){
-//			
-//			if (lista->prox->prox){
-//				
-//				Celula *pR = lista->prox;
-//				lista->prox = lista->prox->prox;
-//				
-//				free(pR);
-//				
-//				return lista;
-//				
-//			}
-//			Celula *pR = lista->prox;
-//			lista->prox = NULL;
-//			free(pR);
-//			return lista;	
-//			
-//		}
-//		
-//	}
-//	
-//}
+Celula *deletar(int dado, Celula *lista){
+	
+	if (lista->dado==dado){
+		
+		Celula *p = lista->prox;
+		free(lista);
+		return p;
+		
+	}
+	
+	for (Celula *p=lista; p->prox ;p=p->prox){
+		
+		if (p->prox->dado==dado){
+			
+			if (p->prox->prox){
+				
+				Celula *pR = p->prox;
+				p->prox = p->prox->prox;				
+				free(pR);
+				
+				return lista;
+				
+			}
+			Celula *pR = p->prox;
+			p->prox = NULL;
+			free(pR);
+			return lista;	
+			
+		}
+		
+	}
+	
+	return lista;
+	
+}
 
-//Celula *remover_pares(Celula *lista){
-//	
-//	Celula *p;
-//	for (p=lista; p ;p=p->prox){
-//				
-//		if ((p->dado % 2) == 0){
-//			
-//			lista = deletar(p->dado,lista);
-//		
-//		}
-//		
-//	}
-//	
-//	return lista;
-//	
-//}
+Celula *remover_pares(Celula *lista){
+	
+	Celula *p;
+	int condicao;
+	int condicao2 = 1;
+	
+	while (condicao2 == 1){
+		
+		condicao = 1;
+		
+		for (p=lista; condicao == 1 ;p=p->prox){
+					
+			if ((p->dado % 2) == 0 || !p->prox){
+				
+				if ((p->dado % 2) == 0){
+					
+					lista = deletar(p->dado,lista);
+					
+				}
+				condicao = 0;
+			
+			}
+			
+			if ((p->dado % 2) == 1 && !p->prox) condicao2 = 0;
+			
+		}
+		
+	}
+	
+	return lista;
+	
+}
 
 Celula *unir_listas(Celula *lista1, Celula *lista2){
 		
@@ -150,49 +147,74 @@ Celula *unir_listas(Celula *lista1, Celula *lista2){
 		
 }
 
-Celula *ordenar(int tamanho,Celula *lista){
+bool contem(int dado,Celula * lista){
+   
+   	if (!lista){
+   		
+   		return false;
+   		
+   	}
+    for(Celula *p=lista; p ;p = p->prox){
+       
+        if (p->dado==dado){
+           
+            return true;
+           
+        }
+       
+    }
+   
+    return false;
+   
+}
+
+Celula *ordenar(Celula *lista){
 	
-	int menor = lista->dado;
-	int parar = 1;
+	int menor;
 	int contador = 0;
+	int flag;	
+	Celula *ordenada = NULL;
 	
-	Celula *p;
-	Celula *p1 = NULL;
-	
-	while (parar == 1){
+	while (true){
 		
-		for (p=lista->prox; p ; p=p->prox){
+		menor = INT_MAX;
+		flag = 0;
 		
-			if (menor>p->dado&&!contem(p->dado,p1)) menor = p->dado;
+		Celula *p;
+		for (p=lista; p ; p=p->prox){
 		
-		}
-		
-		p1 = inserir(menor,p1);
-		
-		for (Celula *pAux=p1; pAux ; pAux=pAux->prox){
-			
-			contador++;
-			
-		}
-		
-		if (contador == tamanho) parar =0;
-		
-		if (parar == 1){
-			
-			for (p=lista->prox; p ;p=p->prox){
+			if (!contem(p->dado,ordenada)&&menor>p->dado){
 				
-				if (!contem(p->dado,p1)){
-					
-					menor = p->dado;
-					
-				}
+				menor = p->dado;
+				flag = 1;
 				
 			}
-			
+		
 		}
+		if (flag == 0){
+			
+			return ordenada;
+	       		
+		}
+		
+		ordenada = inserir(menor,ordenada);
+		
+	}
+		
+}
+
+Celula *deletar_lista(Celula *lista){
+	
+	Celula *temporaria;
+	
+	while (lista != NULL){ 
+		
+		temporaria = lista;
+        lista = lista->prox;
+        free(temporaria);
 		
 	}
 	
-	return p1;
-		
+	return lista;
+	
 }
